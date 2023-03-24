@@ -11,14 +11,25 @@ jobs:
       - name: Checkout 🛎️
         uses: actions/checkout@v3
 
-      - name: Install, lint, build 🔧
+      - name: Create gh-pages branch 🌿
         run: |
-          npm install
-          npm run lint:js
-          npm run build
+          git config --global user.email "<YOUR-EMAIL>"
+          git config --global user.name "<YOUR-USERNAME>"
+          git branch -r | grep -q "origin/gh-pages" || git checkout --orphan gh-pages
+          git rm -rf .
+          touch .nojekyll
+          git add .nojekyll
+          git commit -m "Initial commit"
+          git push origin gh-pages
+
+      - name: Install dependencies 🔧
+        run: npm install
+
+      - name: Build 🔨
+        run: npm run build
 
       - name: Deploy 🚀
-        uses: JamesIves/github-pages-deploy-action@4.1.0
+        uses: JamesIves/github-pages-deploy-action@4.1.1
         with:
           branch: gh-pages
           folder: build
