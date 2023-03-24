@@ -12,6 +12,11 @@ jobs:
       - name: Checkout 🛎️
         uses: actions/checkout@v3
 
+      - name: Configure Git ⚙️
+          run: |
+            git config --global user.email "pawel.rogowski.praca@gmail.com"
+            git config --global user.name "pawelrogowski"
+
       - name: Create gh-pages branch if it doesn't exist 🌳
         run: |
           if [ -z "$(git ls-remote --heads origin gh-pages)" ]; then
