@@ -1,4 +1,4 @@
-name: Build and deploy to GitHub Pages
+name: Create Branch & Build and deploy to GitHub Pages
 
 on:
   push:
@@ -10,7 +10,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout 🛎️
-        uses: actions/checkout@v3
+        uses: actions/checkout@v2
 
       - name: Configure Git ⚙️
         run: |
@@ -20,13 +20,26 @@ jobs:
       - name: Create gh-pages branch if it doesn't exist 🌳
         run: |
           if [ -z "$(git ls-remote --heads origin gh-pages)" ]; then
-            git checkout --orphan gh-pages
-            git rm -rf .
-            touch README.md
-            git add README.md
-            git commit -m "Initial commit"
+            git checkout -b gh-pages
             git push -u origin gh-pages
+            git checkout -
+          else
+            git checkout gh-pages
+            git pull origin gh-pages
+            git checkout -
           fi
+
+      - name: Copy main branch to gh-pages branch 🔄
+        run: |
+          git checkout main
+          git pull origin main
+          git checkout gh-pages
+          git pull origin gh-pages
+          cp -r $GITHUB_WORKSPACE/* .
+          git add .
+          git commit -m "Update gh-pages branch"
+          git push origin gh-pages
+          git checkout -
 
       - name: Install, lint, build 🔧
         run: |
