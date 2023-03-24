@@ -2,7 +2,8 @@ name: Build and deploy to GitHub Pages
 
 on:
   push:
-    branches: [main]
+    branches:
+      - main
 
 jobs:
   build-and-deploy:
@@ -11,22 +12,22 @@ jobs:
       - name: Checkout 🛎️
         uses: actions/checkout@v3
 
-      - name: Create gh-pages branch 🌿
+      - name: Create gh-pages branch if it doesn't exist 🌳
         run: |
-          git config --global user.email "pawel.rogowski.praca@gmail.com"
-          git config --global user.name "pawelrogowski"
-          git branch -r | grep -q "origin/gh-pages" || git checkout --orphan gh-pages
-          git rm -rf .
-          touch .nojekyll
-          git add .nojekyll
-          git commit -m "Initial commit"
-          git push origin gh-pages
+          if [ -z "$(git ls-remote --heads origin gh-pages)" ]; then
+            git checkout --orphan gh-pages
+            git rm -rf .
+            touch README.md
+            git add README.md
+            git commit -m "Initial commit"
+            git push -u origin gh-pages
+          fi
 
-      - name: Install dependencies 🔧
-        run: npm install
-
-      - name: Build 🔨
-        run: npm run build
+      - name: Install, lint, build 🔧
+        run: |
+          npm install
+          npm run lint:js
+          npm run build
 
       - name: Deploy 🚀
         uses: JamesIves/github-pages-deploy-action@4.1.1
