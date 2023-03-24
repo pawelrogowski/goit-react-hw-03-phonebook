@@ -13,8 +13,8 @@ jobs:
 
       - name: Create gh-pages branch 🌿
         run: |
-          git config --global user.email "<YOUR-EMAIL>"
-          git config --global user.name "<YOUR-USERNAME>"
+          git config --global user.email "pawel.rogowski.praca@gmail.com"
+          git config --global user.name "pawelrogowski"
           git branch -r | grep -q "origin/gh-pages" || git checkout --orphan gh-pages
           git rm -rf .
           touch .nojekyll
