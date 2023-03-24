@@ -29,18 +29,6 @@ jobs:
             git checkout -
           fi
 
-      - name: Copy main branch to gh-pages branch 🔄
-        run: |
-          git checkout main
-          git pull origin main
-          git checkout gh-pages
-          git pull origin gh-pages
-          cp -r $GITHUB_WORKSPACE/* .
-          git add .
-          git commit -m "Update gh-pages branch"
-          git push origin gh-pages
-          git checkout -
-
       - name: Install, lint, build 🔧
         run: |
           npm install
